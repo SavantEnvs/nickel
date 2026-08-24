@@ -1,0 +1,25 @@
+[package]
+name = "nickel-mayhem-kat"
+version = "0.0.0"
+publish = false
+edition = "2021"
+
+# Deliberately NOT the real `nickel` CLI binary (cli/ workspace member): that crate's
+# convert.rs unconditionally calls nickel_lang_core::format::format regardless of the CLI's own
+# feature flags, so it drags in the "format" feature's heavy deps (topiary-core, topiary-queries,
+# tree-sitter-nickel) no matter what — plus clap, directories, gix. This tiny standalone crate
+# calls the exact same public API path the CLI's `eval` subcommand uses
+# (ProgramBuilder::build().eval_full(), printed via the same NickelValue Display impl —
+# cli/src/eval.rs does `program.eval_full().map(|t| println!("{t}"))`, this does the same) with
+# only nickel-lang-core (default-features = false, matching the fuzz targets) as a dependency —
+# far lighter to compile, which matters on a build host shared with ~14 other concurrent workers.
+[dependencies.nickel-lang-core]
+path = "../../core"
+default-features = false
+
+[[bin]]
+name = "kat"
+path = "src/main.rs"
+
+# Standalone crate — NOT a member of the upstream root [workspace] (mirrors mayhem/fuzz/Cargo.toml).
+[workspace]

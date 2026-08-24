@@ -1,0 +1,13 @@
+project: savantenvs/nickel
+target: eval
+
+testsuite:
+  - https://$MAYHEM_DOMAIN/$MAYHEM_PROJECT/$MAYHEM_TARGET/testsuite.tar
+  - file://mayhem/eval/testsuite
+
+cmds:
+  - cmd: /mayhem/eval
+    libfuzzer: true
+    timeout: 30
+    env:
+      MFUZZ_COMPAT_LEVEL: '2'

@@ -1,0 +1,13 @@
+project: savantenvs/nickel
+target: parse_typecheck
+
+testsuite:
+  - https://$MAYHEM_DOMAIN/$MAYHEM_PROJECT/$MAYHEM_TARGET/testsuite.tar
+  - file://mayhem/parse_typecheck/testsuite
+
+cmds:
+  - cmd: /mayhem/parse_typecheck
+    libfuzzer: true
+    timeout: 30
+    env:
+      MFUZZ_COMPAT_LEVEL: '2'
